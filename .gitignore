@@ -1,0 +1,39 @@
+# Ignore build output directories for all services
+**/bin/
+**/obj/
+**/publish/
+
+# Ignore user-specific and IDE-related files
+*.user
+*.rsuser
+*.suo
+.vscode/
+.idea/
+.vs/
+
+# Ignore temporary and log files
+*.log
+logs/
+*.tmp
+*.bak
+*.pdb
+
+# Ignore environment-specific configuration files
+**/appsettings.Development.json
+
+# Ignore NuGet artifacts
+*.nupkg
+.nuget/
+
+# Ignore test results
+TestResults/
+*.coverage
+*.trx
+
+# Ignore deployment-related files
+*.pubxml
+*.pubxml.user
+
+# Node.js-related (if applicable)
+**/node_modules/
+**/package-lock.json

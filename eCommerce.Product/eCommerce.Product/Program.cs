@@ -21,7 +21,6 @@ builder.Services.ConfigureHttpJsonOptions(options => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(builder => {
         builder.WithOrigins("http://localhost:4200")

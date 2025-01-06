@@ -4,27 +4,33 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PASSWORD": "7882"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5083",
+      "applicationUrl": "http://localhost:8080",
       "launchUrl": "swagger"
     },
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PASSWORD": "7882"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7052;http://localhost:5083",
+      "applicationUrl": "https://localhost:8081;http://localhost:8080",
       "launchUrl": "swagger"
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PASSWORD": "7882"
       }
     },
     "Container (Dockerfile)": {

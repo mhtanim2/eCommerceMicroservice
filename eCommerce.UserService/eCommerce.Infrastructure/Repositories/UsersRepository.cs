@@ -34,5 +34,14 @@ public class UsersRepository : IUsersRepository
         ApplicationUser? user = await _context.DbConnection.QueryFirstOrDefaultAsync<ApplicationUser>(query, parameters);
         return user;
     }
+
+
+    public async Task<ApplicationUser?> GetUserByUserID(Guid? userID)
+    {
+        var query = "SELECT * FROM public.\"Users\" WHERE \"UserID\" = @UserID";
+        var parameters = new { UserID = userID };
+        
+        return await _context.DbConnection.QueryFirstOrDefaultAsync<ApplicationUser>(query, parameters);
+    }
 }
 

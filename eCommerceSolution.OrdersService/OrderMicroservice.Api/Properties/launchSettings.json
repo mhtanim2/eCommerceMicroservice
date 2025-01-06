@@ -6,10 +6,13 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_HOST": "localhost",
-        "MONGODB_PORT": "27017"
+        "MONGODB_PORT": "27017",
+        "MONGODB_DATABASE": "OrdersDatabase",
+        "UsersMicroserviceName": "localhost",
+        "UsersMicroservicePort": "9090"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:7070",
+      "applicationUrl": "http://localhost:7072",
       "launchUrl": "swagger"
     },
     "https": {
@@ -18,10 +21,13 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_HOST": "localhost",
-        "MONGODB_PORT": "27017"
+        "MONGODB_PORT": "27017",
+        "MONGODB_DATABASE": "OrdersDatabase",
+        "UsersMicroserviceName": "localhost",
+        "UsersMicroservicePort": "9090"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7071;http://localhost:7070",
+      "applicationUrl": "https://localhost:7071;http://localhost:7072",
       "launchUrl": "swagger"
     },
     "IIS Express": {
@@ -30,7 +36,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_HOST": "localhost",
-        "MONGODB_PORT": "27017"
+        "MONGODB_PORT": "27017",
+        "MONGODB_DATABASE": "OrdersDatabase",
+        "UsersMicroserviceName": "localhost",
+        "UsersMicroservicePort": "9090"
       }
     },
     "Container (Dockerfile)": {
@@ -39,7 +48,10 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "7071",
-        "ASPNETCORE_HTTP_PORTS": "7070"
+        "ASPNETCORE_HTTP_PORTS": "7072",
+        "MONGODB_DATABASE": "OrdersDatabase",
+        "UsersMicroserviceName": "localhost",
+        "UsersMicroservicePort": "9090"
       },
       "publishAllPorts": true,
       "useSSL": true

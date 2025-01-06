@@ -4,7 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 7070
+EXPOSE 7072
 EXPOSE 7071
 
 
@@ -29,4 +29,7 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENV MONGODB_HOST=localhost
 ENV MONGODB_PORT=27017
+ENV MONGODB_DATABASE=OrdersDatabase
+ENV UsersMicroserviceName=localhost
+ENV UsersMicroservicePort=9090
 ENTRYPOINT ["dotnet", "OrderMicroservice.Api.dll"]

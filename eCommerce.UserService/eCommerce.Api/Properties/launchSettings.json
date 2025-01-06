@@ -5,20 +5,25 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "POSTGRES_HOST": "localhost",
-        "POSTGRES_PASSWORD": "7882"
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DATABASE": "eMicroUsers",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "7882",
+        "POSTGRES_HOST": "localhost"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:9090",
-      "launchUrl": "swagger"
+      "applicationUrl": "http://localhost:9090"
     },
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "POSTGRES_HOST": "localhost",
-        "POSTGRES_PASSWORD": "7882"
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DATABASE": "eMicroUsers",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "7882",
+        "POSTGRES_HOST": "localhost"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:9091;http://localhost:9090",
@@ -29,17 +34,25 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "POSTGRES_HOST": "localhost",
-        "POSTGRES_PASSWORD": "7882"
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DATABASE": "eMicroUsers",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "7882",
+        "POSTGRES_HOST": "localhost"
       }
     },
-    "Container (Dockerfile)": {
+    "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "9091",
-        "ASPNETCORE_HTTP_PORTS": "9090"
+        "ASPNETCORE_HTTP_PORTS": "9090",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DATABASE": "eMicroUsers",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "7882",
+        "POSTGRES_HOST": "localhost"
       },
       "publishAllPorts": true,
       "useSSL": true

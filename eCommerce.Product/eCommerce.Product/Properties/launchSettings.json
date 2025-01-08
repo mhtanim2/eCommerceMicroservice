@@ -6,7 +6,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MYSQL_HOST": "localhost",
-        "MYSQL_PASSWORD": "7882"
+        "MYSQL_PASSWORD": "7882",
+        "MYSQL_PORT": "3306",
+        "MYSQL_DATABASE": "ecommerceproductsdatabase",
+        "MYSQL_USER": "root"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:8080",
@@ -18,7 +21,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MYSQL_HOST": "localhost",
-        "MYSQL_PASSWORD": "7882"
+        "MYSQL_PASSWORD": "7882",
+        "MYSQL_PORT": "3306",
+        "MYSQL_DATABASE": "ecommerceproductsdatabase",
+        "MYSQL_USER": "root"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:8081;http://localhost:8080",
@@ -30,7 +36,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MYSQL_HOST": "localhost",
-        "MYSQL_PASSWORD": "7882"
+        "MYSQL_PASSWORD": "7882",
+        "MYSQL_PORT": "3306",
+        "MYSQL_DATABASE": "ecommerceproductsdatabase",
+        "MYSQL_USER": "root"
       }
     },
     "Container (Dockerfile)": {
@@ -39,7 +48,12 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "8081",
-        "ASPNETCORE_HTTP_PORTS": "8080"
+        "ASPNETCORE_HTTP_PORTS": "8080",
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PASSWORD": "7882",
+        "MYSQL_PORT": "3306",
+        "MYSQL_DATABASE": "ecommerceproductsdatabase",
+        "MYSQL_USER": "root"
       },
       "publishAllPorts": true,
       "useSSL": true

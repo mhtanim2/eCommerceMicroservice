@@ -9,10 +9,12 @@
         "MONGODB_PORT": "27017",
         "MONGODB_DATABASE": "OrdersDatabase",
         "UsersMicroserviceName": "localhost",
-        "UsersMicroservicePort": "9090"
+        "UsersMicroservicePort": "9090",
+        "ProductsMicroserviceName": "localhost",
+        "ProductsMicroservicePort": "8088"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:7072",
+      "applicationUrl": "http://localhost:8080",
       "launchUrl": "swagger"
     },
     "https": {
@@ -24,10 +26,12 @@
         "MONGODB_PORT": "27017",
         "MONGODB_DATABASE": "OrdersDatabase",
         "UsersMicroserviceName": "localhost",
-        "UsersMicroservicePort": "9090"
+        "UsersMicroservicePort": "9090",
+        "ProductsMicroserviceName": "localhost",
+        "ProductsMicroservicePort": "8088"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7071;http://localhost:7072",
+      "applicationUrl": "https://localhost:8081;http://localhost:8080",
       "launchUrl": "swagger"
     },
     "IIS Express": {
@@ -39,7 +43,9 @@
         "MONGODB_PORT": "27017",
         "MONGODB_DATABASE": "OrdersDatabase",
         "UsersMicroserviceName": "localhost",
-        "UsersMicroservicePort": "9090"
+        "UsersMicroservicePort": "9090",
+        "ProductsMicroserviceName": "localhost",
+        "ProductsMicroservicePort": "8088"
       }
     },
     "Container (Dockerfile)": {
@@ -47,11 +53,13 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
-        "ASPNETCORE_HTTPS_PORTS": "7071",
-        "ASPNETCORE_HTTP_PORTS": "7072",
+        "ASPNETCORE_HTTPS_PORTS": "8081",
+        "ASPNETCORE_HTTP_PORTS": "8080",
         "MONGODB_DATABASE": "OrdersDatabase",
         "UsersMicroserviceName": "localhost",
-        "UsersMicroservicePort": "9090"
+        "UsersMicroservicePort": "9090",
+        "ProductsMicroserviceName": "localhost",
+        "ProductsMicroservicePort": "8088"
       },
       "publishAllPorts": true,
       "useSSL": true

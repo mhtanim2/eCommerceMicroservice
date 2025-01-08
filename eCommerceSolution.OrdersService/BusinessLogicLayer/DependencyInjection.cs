@@ -17,7 +17,7 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(OrderAddRequestToOrderMappingProfile).Assembly);
 
         services.AddScoped<IOrdersService, OrdersService>();
-
+        
         return services;
     }
 }

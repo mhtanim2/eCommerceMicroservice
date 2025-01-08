@@ -19,6 +19,8 @@ public static class ProductAPIEndpoints
         app.MapGet("/api/products/search/product-id/{ProductID:guid}", async (IProductsService productsService, Guid ProductID) =>
         {
             ProductResponse? product = await productsService.GetProductByCondition(temp => temp.ProductID == ProductID);
+            if (product==null)
+                return Results.NotFound();
             return Results.Ok(product);
         });
 
@@ -31,6 +33,9 @@ public static class ProductAPIEndpoints
             List<ProductResponse?> productsByCategory = await productsService.GetProductsByCondition(temp => temp.Category != null && temp.Category.Contains(SearchString, StringComparison.OrdinalIgnoreCase));
 
             var products = productsByProductName.Union(productsByCategory);
+
+            if (products==null)
+                return Results.NotFound();
 
             return Results.Ok(products);
         });

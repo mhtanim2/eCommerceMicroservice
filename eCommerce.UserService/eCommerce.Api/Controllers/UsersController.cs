@@ -20,16 +20,14 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetUserByUserID(Guid userID)
     {
         if (userID == Guid.Empty)
-        {
             return BadRequest("Invalid User ID");
-        }
+        
 
         UserDTO? response = await _usersService.GetUserByUserID(userID);
 
         if (response == null)
-        {
             return NotFound(response);
-        }
+        
 
         return Ok(response);
     }

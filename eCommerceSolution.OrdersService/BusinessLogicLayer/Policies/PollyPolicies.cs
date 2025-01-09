@@ -46,7 +46,6 @@ public class PollyPolicies : IPollyPolicies
          onReset: () => {
              _logger.LogInformation($"Circuit breaker closed. The subsequent requests will be allowed.");
          });
-
         return policy;
     }
 

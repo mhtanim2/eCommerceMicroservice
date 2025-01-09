@@ -14,6 +14,8 @@ services:
      - UsersMicroservicePort=8080
      - ProductsMicroserviceName=products-microservice
      - ProductsMicroservicePort=8080
+     - REDIS_HOST=redis
+     - REDIS_PORT=6379
     ports:
      - "7000:8080"
     networks:
@@ -94,6 +96,17 @@ services:
     - ../mysql-init:/docker-entrypoint-initdb.d
    networks:
     - products-mysql-network
+  
+
+  redis:
+   image: redis:latest
+   ports:
+    - "6379:6379"
+   volumes:
+    - ../redis-cache:/data
+   networks:
+    - ecommerce-network
+  
 
 networks:
  orders-mongodb-network:

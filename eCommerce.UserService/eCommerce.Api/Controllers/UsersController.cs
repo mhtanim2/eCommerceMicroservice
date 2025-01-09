@@ -22,7 +22,6 @@ public class UsersController : ControllerBase
         if (userID == Guid.Empty)
             return BadRequest("Invalid User ID");
         
-
         UserDTO? response = await _usersService.GetUserByUserID(userID);
 
         if (response == null)

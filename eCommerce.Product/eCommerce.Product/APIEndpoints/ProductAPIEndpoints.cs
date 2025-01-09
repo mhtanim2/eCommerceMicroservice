@@ -8,12 +8,12 @@ namespace eCommerce.Api.APIEndpoints;
 public static class ProductAPIEndpoints
 {
     public static IEndpointRouteBuilder MapProductAPIEndpoints(this IEndpointRouteBuilder app) {
+        
         app.MapGet("/api/products", async (IProductsService productsService) =>
         {
             List<ProductResponse?> products = await productsService.GetProducts();
             return Results.Ok(products);
         });
-
 
         //GET /api/products/search/product-id/00000000-0000-0000-0000-000000000000
         app.MapGet("/api/products/search/product-id/{ProductID:guid}", async (IProductsService productsService, Guid ProductID) =>
@@ -80,7 +80,6 @@ public static class ProductAPIEndpoints
                     grp => grp.Select(err => err.ErrorMessage).ToArray());
                 return Results.ValidationProblem(errors);
             }
-
 
             var updatedProductResponse = await productsService.UpdateProduct(productUpdateRequest);
             if (updatedProductResponse != null)

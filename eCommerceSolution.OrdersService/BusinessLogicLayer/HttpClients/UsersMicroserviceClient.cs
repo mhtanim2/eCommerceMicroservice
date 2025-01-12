@@ -15,7 +15,8 @@ public class UsersMicroserviceClient
     private readonly ILogger<UsersMicroserviceClient> _logger;
     private readonly IDistributedCache _distributedCache;
 
-    public UsersMicroserviceClient(HttpClient httpClient, ILogger<UsersMicroserviceClient> logger,
+    public UsersMicroserviceClient(HttpClient httpClient, 
+        ILogger<UsersMicroserviceClient> logger,
         IDistributedCache distributedCache)
     {
         this._httpClient = httpClient;

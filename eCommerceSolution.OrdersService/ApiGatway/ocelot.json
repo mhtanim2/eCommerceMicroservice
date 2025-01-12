@@ -5,11 +5,10 @@
       "DownstreamPathTemplate": "/api/Orders",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ordersmicroservice.api",
+          "Host": "ordermicroservice.api",
           "Port": 8080
         }
       ],
-      /* http://localhost:5000/gateway/Orders to http://ordersmicroservice.api:8080/api/Orders */
       "UpstreamHttpMethod": [
         "Get",
         "Post",
@@ -20,6 +19,12 @@
       "FileCacheOptions": {
         "TtlSeconds": 30,
         "Region": "orders"
+      },
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1m",
+        "PeriodTimespan": 10,
+        "Limit": 5
       }
     },
 
@@ -29,7 +34,7 @@
       "DownstreamPathTemplate": "/api/Orders/search/orderid/{orderID}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ordersmicroservice.api",
+          "Host": "ordermicroservice.api",
           "Port": 8080
         }
       ],
@@ -45,7 +50,7 @@
       "DownstreamPathTemplate": "/api/Orders/search/productid/{productID}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ordersmicroservice.api",
+          "Host": "ordermicroservice.api",
           "Port": 8080
         }
       ],
@@ -61,7 +66,7 @@
       "DownstreamPathTemplate": "/api/Orders/search/orderDate/{orderDate}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ordersmicroservice.api",
+          "Host": "ordermicroservice.api",
           "Port": 8080
         }
       ],
@@ -77,7 +82,7 @@
       "DownstreamPathTemplate": "/api/Orders/search/userid/{userID}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ordersmicroservice.api",
+          "Host": "ordermicroservice.api",
           "Port": 8080
         }
       ],
@@ -93,7 +98,7 @@
       "DownstreamPathTemplate": "/api/Orders/{orderID}",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ordersmicroservice.api",
+          "Host": "ordermicroservice.api",
           "Port": 8080
         }
       ],
@@ -204,7 +209,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "users-microservice",
-          "Port": 9090
+          "Port": 8080
         }
       ],
       "UpstreamHttpMethod": [
@@ -221,7 +226,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "users-microservice",
-          "Port": 9090
+          "Port": 8080
         }
       ],
       "UpstreamHttpMethod": [
@@ -238,7 +243,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "users-microservice",
-          "Port": 9090
+          "Port": 8080
         }
       ],
       "UpstreamHttpMethod": [

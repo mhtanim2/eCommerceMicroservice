@@ -14,7 +14,8 @@ public class ProductsMicroserviceClient
     private readonly ILogger<ProductsMicroserviceClient> _logger;
     private readonly IDistributedCache _distributedCache;
 
-    public ProductsMicroserviceClient(HttpClient httpClient,ILogger<ProductsMicroserviceClient> logger,
+    public ProductsMicroserviceClient(HttpClient httpClient,
+        ILogger<ProductsMicroserviceClient> logger,
         IDistributedCache distributedCache)
     {
         _httpClient = httpClient;

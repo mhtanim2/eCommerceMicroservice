@@ -109,7 +109,7 @@ public class ProductsService:IProductsService
         return productResponses.ToList();
     }
 
-
+    
     public async Task<ProductResponse?> UpdateProduct(ProductUpdateRequest productUpdateRequest)
     {
         Product? existingProduct = await _productsRepository.GetProductByCondition(temp => temp.ProductID == productUpdateRequest.ProductID);
@@ -129,12 +129,26 @@ public class ProductsService:IProductsService
             string errors = string.Join(", ", validationResult.Errors.Select(temp => temp.ErrorMessage)); //Error1, Error2, ...
             throw new ArgumentException(errors);
         }
+
+
         //Map from ProductUpdateRequest to Product type
         Product product = _mapper.Map<Product>(productUpdateRequest); //Invokes ProductUpdateRequestToProductMappingProfile
 
-
+        //Check if product name is changed
+        bool isProductNameChanged = productUpdateRequest.ProductName != existingProduct.ProductName;
 
         Product? updatedProduct = await _productsRepository.UpdateProduct(product);
+
+
+        //Publish product.update.name message to the exchange
+        if (isProductNameChanged)
+        {
+            string routingKey = "product.update.name";
+            var message = new ProductNameUpdateMessage(product.ProductID, product.ProductName);
+
+            _rabbitMQPublisher.Publish<ProductNameUpdateMessage>(routingKey, message);
+        }
+
 
         ProductResponse? updatedProductResponse = _mapper.Map<ProductResponse>(updatedProduct);
 

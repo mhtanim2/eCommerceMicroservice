@@ -14,7 +14,6 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
     public RabbitMQPublisher(IConfiguration configuration)
     {
         _configuration = configuration;
-
         string hostName = _configuration["RabbitMQ_HostName"]!;
         string userName = _configuration["RabbitMQ_UserName"]!;
         string password = _configuration["RabbitMQ_Password"]!;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLoginLayer.DTO;
+using BusinessLoginLayer.RabbitMQ;
 using BusinessLoginLayer.ServiceContracts;
 using DataAccessLayer.Entities;
 using DataAccessLayer.RepositoryContracts;
@@ -15,15 +16,18 @@ public class ProductsService:IProductsService
     private readonly IMapper _mapper;
     private readonly IValidator<ProductAddRequest> _productAddRequestValidator;
     private readonly IValidator<ProductUpdateRequest> _productUpdateRequestValidator;
+    private readonly IRabbitMQPublisher _rabbitMQPublisher;
 
     public ProductsService(IProductsRepository productsRepository,IMapper mapper, 
         IValidator<ProductAddRequest> productAddRequestValidator,
-        IValidator<ProductUpdateRequest> productUpdateRequestValidator)
+        IValidator<ProductUpdateRequest> productUpdateRequestValidator,
+        IRabbitMQPublisher rabbitMQPublisher)
     {
         this._productsRepository = productsRepository;
         this._mapper = mapper;
         this._productAddRequestValidator = productAddRequestValidator;
         this._productUpdateRequestValidator = productUpdateRequestValidator;
+        this._rabbitMQPublisher = rabbitMQPublisher;
     }
 
     public async Task<ProductResponse?> AddProduct(ProductAddRequest productAddRequest)
@@ -125,10 +129,10 @@ public class ProductsService:IProductsService
             string errors = string.Join(", ", validationResult.Errors.Select(temp => temp.ErrorMessage)); //Error1, Error2, ...
             throw new ArgumentException(errors);
         }
-
-
         //Map from ProductUpdateRequest to Product type
         Product product = _mapper.Map<Product>(productUpdateRequest); //Invokes ProductUpdateRequestToProductMappingProfile
+
+
 
         Product? updatedProduct = await _productsRepository.UpdateProduct(product);
 

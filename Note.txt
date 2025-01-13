@@ -1,1 +1,13 @@
 10. Api getway: Ocelot, Ocelot.Provider.Polly.
+Have to run the container using docker compose.
+
+11. Async Communication:
+Package: RabbitMQ.Client
+RabbitMQ-
+I. Fanout
+II. Direct
+III. Topic
+IV. Header
+
+1. Run RabbitMQ container
+2. Management port and Visualized port

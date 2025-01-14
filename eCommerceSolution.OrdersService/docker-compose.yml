@@ -82,6 +82,11 @@ services:
     - MYSQL_DATABASE=ecommerceproductsdatabase
     - MYSQL_USER=root
     - MYSQL_PASSWORD=7882
+    - RabbitMQ_HostName=rabbitmq
+    - RabbitMQ_UserName=user
+    - RabbitMQ_Password=password
+    - RabbitMQ_Port=5672
+    - RabbitMQ_Products_Exchange=product.exchange
    ports:
     - "6000:8080"
    networks:
@@ -101,18 +106,6 @@ services:
     - ../mysql-init:/docker-entrypoint-initdb.d
    networks:
     - products-mysql-network
-  
-
-  rabbitmq:
-   image: rabbitmq:3.13-management
-   ports:
-    - "5672:5672"
-    - "15672:15672"
-   environment:
-    - RABBITMQ_DEFAULT_USER=user
-    - RABBITMQ_DEFAULT_PASS=password
-   networks:
-    - ecommerce-network
 
 
   redis:
@@ -133,7 +126,19 @@ services:
    ports:
     - "4000:8080"
    networks:
-    - ecommerce-network  
+    - ecommerce-network
+
+
+  rabbitmq:
+   image: rabbitmq:3.13-management
+   ports:
+    - "5672:5672"
+    - "15672:15672"
+   environment:
+    - RABBITMQ_DEFAULT_USER=user
+    - RABBITMQ_DEFAULT_PASS=password
+   networks:
+    - ecommerce-network
 
 
 networks:

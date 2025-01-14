@@ -1,5 +1,6 @@
 ﻿
 using BusinessLogicLayer.Mappers;
+using BusinessLogicLayer.RabbitMQ;
 using BusinessLogicLayer.ServiceContracts;
 using BusinessLogicLayer.Services;
 using BusinessLogicLayer.Validators;
@@ -17,12 +18,18 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(OrderAddRequestToOrderMappingProfile).Assembly);
 
         services.AddScoped<IOrdersService, OrdersService>();
-
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = $"{configuration["REDIS_HOST"]}:{configuration["REDIS_PORT"]}";
         });
 
+        services.AddTransient<IRabbitMQProductNameUpdateConsumer, RabbitMQProductNameUpdateConsumer>();
+
+        services.AddTransient<IRabbitMQProductDeletionConsumer, RabbitMQProductDeletionConsumer>();
+
+        services.AddHostedService<RabbitMQProductNameUpdateHostedService>();
+
+        services.AddHostedService<RabbitMQProductDeletionHostedService>();
 
         return services;
     }

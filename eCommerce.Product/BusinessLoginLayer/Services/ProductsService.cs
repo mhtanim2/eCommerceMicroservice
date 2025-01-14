@@ -68,12 +68,19 @@ public class ProductsService:IProductsService
         Product? existingProduct = await _productsRepository.GetProductByCondition(temp => temp.ProductID == productID);
 
         if (existingProduct == null)
-        {
             return false;
-        }
+        
 
         //Attempt to delete product
         bool isDeleted = await _productsRepository.DeleteProduct(productID);
+
+        if (isDeleted)
+        {
+            ProductDeletionMessage message = new ProductDeletionMessage(existingProduct.ProductID, existingProduct.ProductName);
+            string routingKey = "product.delete";
+
+            _rabbitMQPublisher.Publish(routingKey, message);
+        }
         return isDeleted;
     }
 
@@ -115,10 +122,8 @@ public class ProductsService:IProductsService
         Product? existingProduct = await _productsRepository.GetProductByCondition(temp => temp.ProductID == productUpdateRequest.ProductID);
 
         if (existingProduct == null)
-        {
             throw new ArgumentException("Invalid Product ID");
-        }
-
+        
 
         //Validate the product using Fluent Validation
         ValidationResult validationResult = await _productUpdateRequestValidator.ValidateAsync(productUpdateRequest);

@@ -40,7 +40,7 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
         string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
 
         //Create exchange or declare exchange
-        _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Direct, durable: true);
+        _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic, durable: true);
 
         //Publish message into that exchange
         _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: messageBodyInBytes);

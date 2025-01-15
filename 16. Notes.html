@@ -1,0 +1,164 @@
+<h4>Introduction to RabbitMQ</h4><p><strong>RabbitMQ</strong> is an open-source message broker that enables applications to communicate with each other by sending messages. It implements the Advanced Message Queuing Protocol (AMQP) for message queuing. RabbitMQ is widely used in microservices architectures to enable asynchronous communication between services.</p><p><br></p><p><strong>Key Concepts:</strong></p><ul><li><p><strong>Broker</strong>: RabbitMQ server that manages queues and exchanges.</p></li><li><p><strong>Queue</strong>: Storage for messages until they are processed.</p></li><li><p><strong>Exchange</strong>: Routes messages to one or more queues based on routing rules.</p></li><li><p><strong>Binding</strong>: The relationship between an exchange and a queue that determines how messages are routed.</p></li><li><p><strong>Producer</strong>: Application that sends messages to RabbitMQ.</p></li><li><p><strong>Consumer</strong>: Application that receives messages from RabbitMQ.</p></li></ul><p><br></p><p><br></p><h4>Types of RabbitMQ Exchanges</h4><p>RabbitMQ supports several types of exchanges, each serving different routing needs:</p><ol><li><p><strong>Direct Exchange</strong>:</p><ul><li><p><strong>Purpose</strong>: Routes messages to queues based on a routing key.</p></li><li><p><strong>Use Case</strong>: Direct routing of messages to a specific queue. Ideal for scenarios where you want to route messages with a specific routing key to a particular queue.</p></li><li><p><strong>Example</strong>: A logging system where logs of different severity levels (info, error) are routed to different queues.</p></li></ul><pre class="prettyprint linenums">{
+  "exchangeType": "direct",
+  "routingKey": "info",
+  "queueName": "info-logs"
+}</pre><p><br></p></li><li><p><strong>Fanout Exchange</strong>:</p><ul><li><p><strong>Purpose</strong>: Routes messages to all queues bound to it, ignoring the routing key.</p></li><li><p><strong>Use Case</strong>: Broadcasting messages to multiple queues. Suitable for scenarios where you want all subscribers to receive the same message.</p></li><li><p><strong>Example</strong>: A notification system where all notifications are broadcasted to multiple subscribers.</p></li></ul><pre class="prettyprint linenums">{
+  "exchangeType": "fanout",
+  "queueName": "notifications"
+}</pre><p><br></p></li><li><p><strong>Topic Exchange</strong>:</p><ul><li><p><strong>Purpose</strong>: Routes messages to queues based on matching between routing key patterns and the binding key patterns.</p></li><li><p><strong>Use Case</strong>: Routing messages to multiple queues based on complex routing rules. Ideal for scenarios with multiple consumers interested in specific types of messages.</p></li><li><p><strong>Example</strong>: A news service where messages are routed based on topics like sports, politics, and technology.</p></li></ul><pre class="prettyprint linenums">{
+  "exchangeType": "topic",
+  "routingKeyPattern": "news.sports",
+  "queueName": "sports-news"
+}</pre><p><br></p></li><li><p><strong>Headers Exchange</strong>:</p><ul><li><p><strong>Purpose</strong>: Routes messages based on message headers instead of routing keys.</p></li><li><p><strong>Use Case</strong>: Advanced routing based on multiple header attributes. Useful for complex routing scenarios.</p></li><li><p><strong>Example</strong>: A document processing system where documents are routed based on their type and priority.</p></li></ul><pre class="prettyprint linenums">{
+  "exchangeType": "headers",
+  "headers": {
+    "type": "invoice",
+    "priority": "high"
+  },
+  "queueName": "high-priority-invoices"
+}</pre></li></ol><p><br></p><p><br></p><h4>Creating RabbitMQ Container in Docker Compose File</h4><p>To run RabbitMQ in a Docker container, you can use Docker Compose. Here’s a sample <code>docker-compose.yml</code> file to set up RabbitMQ:</p><pre class="prettyprint linenums">version: '3'
+
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # RabbitMQ default port
+      - "15672:15672" # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password</pre><p><strong>Explanation</strong>:</p><ul><li><p><code>image</code>: Specifies the RabbitMQ Docker image to use. <code>3-management</code> includes the RabbitMQ Management Plugin for a web-based UI.</p></li><li><p><code>ports</code>: Maps the container ports to host ports. <code>5672</code> is the default RabbitMQ port, and <code>15672</code> is for the Management UI.</p></li><li><p><code>environment</code>: Sets default credentials for RabbitMQ.</p></li></ul><p><br></p><p><br></p><h4>Publishing Messages in a Service Class in Business Logic Layer</h4><p>To publish messages to RabbitMQ from a service class, you can use the <code>RabbitMQ.Client</code> library. Here’s a basic example in a .NET Core service class:</p><pre class="prettyprint linenums">using RabbitMQ.Client;
+using System.Text;
+
+public class MessagePublisher
+{
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+
+    public MessagePublisher()
+    {
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
+    }
+
+    public void PublishMessage(string message, string exchangeName, string routingKey)
+    {
+        _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Direct);
+
+        var body = Encoding.UTF8.GetBytes(message);
+
+        _channel.BasicPublish(exchange: exchangeName,
+                             routingKey: routingKey,
+                             basicProperties: null,
+                             body: body);
+    }
+}</pre><p><strong>Explanation</strong>:</p><ul><li><p><code>ConnectionFactory</code>: Creates a connection to RabbitMQ.</p></li><li><p><code>IConnection</code>: Represents the RabbitMQ connection.</p></li><li><p><code>IModel</code>: Represents a channel within the connection.</p></li><li><p><code>ExchangeDeclare</code>: Declares the exchange where messages will be sent.</p></li><li><p><code>BasicPublish</code>: Publishes the message to the specified exchange with a routing key.</p></li></ul><p><br></p><p><br></p><h4>Consuming Messages in a Service Class in Business Logic Layer</h4><p>To consume messages from RabbitMQ, use the following example:</p><pre class="prettyprint linenums">using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
+using System.Text;
+
+public class MessageConsumer
+{
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+
+    public MessageConsumer()
+    {
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
+    }
+
+    public void ConsumeMessages(string queueName)
+    {
+        _channel.QueueDeclare(queue: queueName,
+                             durable: false,
+                             exclusive: false,
+                             autoDelete: false,
+                             arguments: null);
+
+        var consumer = new EventingBasicConsumer(_channel);
+        consumer.Received += (model, ea) =&gt;
+        {
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            Console.WriteLine($"Received {message}");
+        };
+
+        _channel.BasicConsume(queue: queueName,
+                             autoAck: true,
+                             consumer: consumer);
+    }
+}</pre><p><strong>Explanation</strong>:</p><ul><li><p><code>QueueDeclare</code>: Declares a queue to receive messages.</p></li><li><p><code>EventingBasicConsumer</code>: Handles messages received from RabbitMQ.</p></li><li><p><code>Received</code>: Event triggered when a message is received.</p></li><li><p><code>BasicConsume</code>: Starts consuming messages from the specified queue.</p></li></ul><p><br></p><p><br></p><h4>Key Points to Remember (for Interview Preparation)</h4><ul><li><p><strong>RabbitMQ</strong>: Message broker that supports asynchronous communication between services.</p></li><li><p><strong>Exchanges</strong>: Direct, Fanout, Topic, and Headers exchanges have different routing capabilities.</p></li><li><p><strong>Direct Exchange</strong>: Routes based on exact routing keys.</p></li><li><p><strong>Fanout Exchange</strong>: Routes messages to all bound queues.</p></li><li><p><strong>Topic Exchange</strong>: Routes based on pattern matching of routing keys.</p></li><li><p><strong>Headers Exchange</strong>: Routes based on message headers.</p></li><li><p><strong>Docker Compose</strong>: Used to define and run multi-container Docker applications.</p></li><li><p><strong>Publishing/Consuming</strong>: Use RabbitMQ client libraries to interact with RabbitMQ servers.</p></li><li><p><strong>Management UI</strong>: Accessible via port <code>15672</code> for monitoring RabbitMQ.</p></li></ul><p><br></p><p><br></p><p><br></p><p><br></p><h4>Hosted Service in ASP.NET Core for Running RabbitMQ Consumers</h4><p>In ASP.NET Core, you can use a hosted service to run background tasks such as consuming messages from RabbitMQ. A hosted service is a long-running process that can run in the background of your application.</p><p><br></p><p>Here’s how you can create a hosted service to consume RabbitMQ messages:</p><p><strong>1. Implement the Hosted Service:</strong></p><pre class="prettyprint linenums">using Microsoft.Extensions.Hosting;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+public class RabbitMQConsumerHostedService : IHostedService
+{
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+    private readonly string _queueName = "myQueue"; // Name of the queue to consume from
+
+    public RabbitMQConsumerHostedService()
+    {
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
+
+        _channel.QueueDeclare(queue: _queueName,
+                             durable: false,
+                             exclusive: false,
+                             autoDelete: false,
+                             arguments: null);
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        var consumer = new EventingBasicConsumer(_channel);
+        consumer.Received += (model, ea) =&gt;
+        {
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            // Process the message here
+            Console.WriteLine($"Received message: {message}");
+        };
+
+        _channel.BasicConsume(queue: _queueName,
+                             autoAck: true,
+                             consumer: consumer);
+
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _channel.Close();
+        _connection.Close();
+        return Task.CompletedTask;
+    }
+}</pre><p><strong>Explanation:</strong></p><ul><li><p><strong>IHostedService</strong>: An interface that allows you to run background tasks in ASP.NET Core.</p></li><li><p><strong>StartAsync</strong>: Starts the service. Here, it sets up the consumer to listen for messages.</p></li><li><p><strong>StopAsync</strong>: Stops the service and cleans up resources.</p></li></ul><p><br></p><p><strong>2. Register the Hosted Service in </strong><code><strong>Program.cs</strong></code><strong>:</strong></p><pre class="prettyprint linenums">builder.Services.AddHostedService&lt;RabbitMQConsumerHostedService&gt;();</pre><p><strong>Explanation:</strong></p><ul><li><p><strong>AddHostedService</strong>: Registers the <code>RabbitMQConsumerHostedService</code> to run as a background service.</p></li></ul><p><br></p><p><br></p><h4>Fanout Exchange</h4><p><strong>Fanout Exchange</strong> routes messages to all queues bound to it, without considering the routing key. This is useful for scenarios where you need to broadcast messages to multiple consumers.</p><p><strong>Example Scenario:</strong></p><ul><li><p>A notification service that sends a notification to all registered clients.</p></li></ul><p><br></p><p><strong>Setup Example in .NET:</strong></p><pre class="prettyprint linenums">_channel.ExchangeDeclare(exchange: "fanout-exchange", type: ExchangeType.Fanout);
+_channel.BasicPublish(exchange: "fanout-exchange",
+                      routingKey: "",
+                      basicProperties: null,
+                      body: Encoding.UTF8.GetBytes("Broadcast message"));</pre><p><br></p><p><br></p><h4>Topic Exchange</h4><p><strong>Topic Exchange</strong> allows routing messages to queues based on patterns in the routing key. It is useful for complex routing scenarios where you need to route messages to different queues based on multiple criteria.</p><p><strong>Example Scenario:</strong></p><ul><li><p>A news aggregator service where different news topics (e.g., sports, politics) are routed to different queues.</p></li></ul><p><strong>Setup Example in .NET:</strong></p><pre class="prettyprint linenums">_channel.ExchangeDeclare(exchange: "topic-exchange", type: ExchangeType.Topic);
+_channel.BasicPublish(exchange: "topic-exchange",
+                      routingKey: "news.sports",
+                      basicProperties: null,
+                      body: Encoding.UTF8.GetBytes("Sports news update"));</pre><p><br></p><p><br></p><h4>Headers Exchange</h4><p><strong>Headers Exchange</strong> routes messages based on message headers instead of the routing key. This type of exchange provides advanced routing capabilities.</p><p><strong>Example Scenario:</strong></p><ul><li><p>An order processing system where messages are routed based on header attributes like order priority and type.</p></li></ul><p><br></p><p><strong>Setup Example in .NET:</strong></p><pre class="prettyprint linenums">_channel.ExchangeDeclare(exchange: "headers-exchange", type: ExchangeType.Headers);
+
+var properties = _channel.CreateBasicProperties();
+properties.Headers = new Dictionary&lt;string, object&gt;
+{
+    { "order-type", "urgent" },
+    { "order-priority", "high" }
+};
+
+_channel.BasicPublish(exchange: "headers-exchange",
+                      routingKey: "",
+                      basicProperties: properties,
+                      body: Encoding.UTF8.GetBytes("Urgent order message"));</pre><p><br></p><h4>Key Points to Remember (for Interview Preparation)</h4><ul><li><p><strong>RabbitMQ</strong>: A message broker that supports asynchronous communication between services.</p></li><li><p><strong>Exchanges</strong>:</p><ul><li><p><strong>Direct Exchange</strong>: Routes messages based on exact routing keys.</p></li><li><p><strong>Fanout Exchange</strong>: Routes messages to all bound queues.</p></li><li><p><strong>Topic Exchange</strong>: Routes messages based on patterns in routing keys.</p></li><li><p><strong>Headers Exchange</strong>: Routes messages based on message headers.</p></li></ul></li><li><p><strong>Hosted Services</strong>: Used to run background tasks in ASP.NET Core applications, such as consuming messages from RabbitMQ.</p></li><li><p><strong>Consumer Setup</strong>: Implement <code>IHostedService</code> to manage RabbitMQ message consumption.</p></li></ul><p><br></p>

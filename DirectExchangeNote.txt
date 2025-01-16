@@ -1,0 +1,20 @@
+1. Publisher: 
+	i. Publish the route key with value
+	ii. Key could be header or routing key
+	iii. Value can be json or any entity.
+
+2. Publish from Service: 
+	i. Invoke the publisher from service if needed.
+Example:             
+	ProductDeletionMessage message = new ProductDeletionMessage(existingProduct.ProductID, 	existingProduct.ProductName);
+        string routingKey = "product.delete";// This is topic exchange
+	_rabbitMQPublisher.Publish(routingKey, message);
+
+
+3. Binding in receiver:
+	Consume exchange-
+		Exchange Declare, Query, QueryBind
+	Dispose-
+		Dispose channel and connection
+
+	IHostedService to Start and Stop the server.

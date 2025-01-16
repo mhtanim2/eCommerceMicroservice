@@ -1,0 +1,79 @@
+1. Publisher: 
+	i. Publish the route key with value
+	ii. Key could be header or routing key
+	iii. Value can be json or any entity.
+public void Publish<T>(Dictionary<string, object> headers, T message)
+{
+    string messageJson = JsonSerializer.Serialize(message);
+    byte[] messageBodyInBytes = Encoding.UTF8.GetBytes(messageJson);
+
+    //Create exchange
+    string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
+    _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Headers, durable: true);
+
+    //Publish message
+    var basicProperties = _channel.CreateBasicProperties();
+    basicProperties.Headers = headers;
+
+    _channel.BasicPublish(exchange: exchangeName, routingKey: string.Empty, basicProperties: basicProperties, body: messageBodyInBytes);
+}
+
+2. Publish from Service: 
+	i. Invoke the publisher from service if needed.
+Example:             
+	ProductDeletionMessage message = new ProductDeletionMessage(existingProduct.ProductID, 	existingProduct.ProductName);
+        string routingKey = "product.delete";// This is topic exchange
+	_rabbitMQPublisher.Publish(routingKey, message);
+
+
+3. Binding in receiver:
+	Consume exchange-
+		Exchange Declare, Query, QueryBind
+	Dispose-
+		Dispose channel and connection
+
+public void Consume()
+{
+    //string routingKey = "product.#";
+    var headers = new Dictionary<string, object>()
+  {
+    { "x-match", "all" },
+    { "event", "product.delete" },
+    { "RowCount", 1 }
+  };
+
+    string queueName = "orders.product.delete.queue";
+
+    //Create exchange
+    string exchangeName = _configuration["RabbitMQ_Products_Exchange"]!;
+    _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Headers, durable: true);
+
+    //Create message queue
+    _channel.QueueDeclare(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: null); //x-message-ttl | x-max-length | x-expired 
+
+    //Bind the message to exchange
+    _channel.QueueBind(queue: queueName, exchange: exchangeName, routingKey: string.Empty, arguments: headers);
+
+
+    EventingBasicConsumer consumer = new EventingBasicConsumer(_channel);
+
+    consumer.Received += async (sender, args) =>
+    {
+        byte[] body = args.Body.ToArray();
+        string message = Encoding.UTF8.GetString(body);
+
+        if (message != null)
+        {
+            ProductDeletionMessage? productDeletionMessage = JsonSerializer.Deserialize<ProductDeletionMessage>(message);
+
+            if (productDeletionMessage != null)
+            {
+                _logger.LogInformation($"Product deleted: {productDeletionMessage.ProductID}, Product name: {productDeletionMessage.ProductName}");
+
+                await HandleProductDeletion(productDeletionMessage.ProductID);
+            }
+        }
+    };
+
+    _channel.BasicConsume(queue: queueName, consumer: consumer, autoAck: true);
+}

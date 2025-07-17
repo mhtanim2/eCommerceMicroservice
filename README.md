@@ -1,5 +1,7 @@
 # E-TAILING INITIATIVE
 A decentralized Q&A and discussion platform inspired by StackOverflow & Amazon, built with a scalable microservices architecture.
+## System Design Diagram
+![System Design Diagram](./resource/System-Design.png)
 
 ## Config server
   - URL: http://localhost:8888

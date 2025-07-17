@@ -28,7 +28,7 @@ public class RabbitMQPublisher : IRabbitMQPublisher, IDisposable
         };
         _connection = connectionFactory.CreateConnection();// TCP network
 
-        _channel = _connection.CreateModel();// Vertulaized channel ontop of connection
+        _channel = _connection.CreateModel();// Virtualized channel on top of connection
     }
 
 

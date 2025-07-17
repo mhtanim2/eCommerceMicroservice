@@ -53,9 +53,8 @@ public class ProductsService:IProductsService
         Product? addedProduct = await _productsRepository.AddProduct(productInput);
 
         if (addedProduct == null)
-        {
             return null;
-        }
+        
 
         ProductResponse addedProductResponse = _mapper.Map<ProductResponse>(addedProduct); //Map addedProduct into 'ProductRepsonse' type (it invokes ProductToProductResponseMappingProfile)
 
